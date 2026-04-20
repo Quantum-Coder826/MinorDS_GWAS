@@ -1,0 +1,1 @@
+# MinorDS_GWAS
