@@ -17,3 +17,6 @@ data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
 
 data.original.scan <- GWASpoly(data.original,models=c("additive","1-dom"),
                                traits=c("vine.maturity"),params=params,n.core=2)
+
+library(ggplot2)
+qq.plot(data.original.scan,trait="vine.maturity") + ggtitle(label="Original")
