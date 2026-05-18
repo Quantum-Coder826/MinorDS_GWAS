@@ -13,7 +13,7 @@ N <- 957 #Population size
 params <- set.params(geno.freq = 1 - 5/N, fixed = "env", fixed.type = "factor")
 
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
-                           traits=c("vine.maturity"),params=params,n.core=3)
+                           traits=c("Negatief"),params=params,n.core=3)
 
 data.original.scan <- GWASpoly(data.original,models=c("additive","1-dom"),
                                traits=c("vine.maturity"),params=params,n.core=3)
@@ -66,9 +66,37 @@ data.loco <- set.K(data,LOCO=TRUE,n.core=3)
 data.original <- set.K(data,LOCO=FALSE,n.core=3)
 
 N <- 260 #Population size
-params <- set.params(geno.freq = 1 - 5/N, fixed= "Negatief", fixed.type = "numeric")
+params <- set.params(geno.freq = 1 - 5/N, fixed= "Negatief", fixed.type = "numeric") # haal fixed weg
+
+data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"), #haal traits weg
+                           traits=c("fixed"),params=params,n.core=3)
+
+data.original.scan <- GWASpoly(data.original,models=c("additive","1-dom"),
+                               traits=c("vine.maturity"),params=params,n.core=3)
+#fucking fixed what does not exist
 
 
+
+library(ggplot2)
+qq.plot(data.original.scan,trait="vine.maturity") + ggtitle(label="Original")
+
+data2 <- set.threshold(data.loco.scan,method="M.eff",level=0.05)
+
+p <- manhattan.plot(data2,traits="vine.maturity")
+p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
+manhattan.plot(data2,traits="vine.maturity",chrom="chr05")
+
+
+p <- LD.plot(data2, max.loci=1000)
+p + xlim(0,30) 
+
+qtl <- get.QTL(data=data2,traits="vine.maturity",models="additive",bp.window=5e6)
+knitr::kable(qtl)
+
+fit.ans <- fit.QTL(data=data2,trait="vine.maturity",
+                   qtl=qtl[,c("Marker","Model")],
+                   fixed=data.frame(Effect="env",Type="factor"))
+knitr::kable(fit.ans,digits=3)
 
 
 
