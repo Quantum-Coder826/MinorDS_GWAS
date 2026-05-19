@@ -9,17 +9,16 @@ NCORE = 16 #Hoeveel cores ik wil gebuiken, zet ik graag in een var om het snel t
 geno <- "./data/potato_genos.csv"
 pheno <- "./data/potato_phenos.csv"
 
-# NOTE: de ID en Negatief zijn geen traits je kan ze selecteren maar dan faild de `GWASpoly` call.
 data <- read.GWASpoly(ploidy=4, pheno.file=pheno, geno.file=geno,
-                      format="numeric", n.traits=8, delim=";")
+                      format="numeric", n.traits=7, delim=";")
 
 data.loco <- set.K(data,LOCO=TRUE,n.core=NCORE)
-data.original <- set.K(data,LOCO=FALSE,n.core=NCORE)
 
 N <- 260 #Population size
 params <- set.params(geno.freq = 1 - 5/N, fixed= "Negatief", fixed.type = "numeric")
 
+traits.numeric <- c("RIJPTIJD","KIEMRUST","KOOKTYPE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN","GRAUW.NA.VOORBAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
-                           traits=c("fixed"),params=params,n.core=NCORE)
+                           traits=traits.numeric,params=params,n.core=NCORE)
 
 saveRDS(data.loco.scan, "./outputs/data_loco_scan.rds")
