@@ -17,8 +17,9 @@ data.loco <- set.K(data,LOCO=TRUE,n.core=NCORE)
 N <- 260 #Population size
 params <- set.params(geno.freq = 1 - 5/N, fixed= "Negatief", fixed.type = "numeric")
 
-traits.numeric <- c("RIJPTIJD","KIEMRUST","KOOKTYPE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN","GRAUW.NA.VOORBAKKEN")
+
+traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","KOOKTYPE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
-                           traits=traits.numeric,params=params,n.core=NCORE)
+                           traits=traits,params=params,n.core=NCORE)
 
 saveRDS(data.loco.scan, "./outputs/data_loco_scan.rds")
