@@ -18,7 +18,7 @@ N <- 260 #Population size
 params <- set.params(geno.freq = 1 - 5/N, fixed= "Negatief", fixed.type = "numeric")
 
 
-traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","KOOKTYPE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
+traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
                            traits=traits,params=params,n.core=NCORE)
 
