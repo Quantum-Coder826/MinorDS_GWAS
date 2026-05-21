@@ -1,19 +1,4 @@
 library(GWASpoly)
-data <- read.GWASpoly(ploidy=4, pheno.file=phenofile, geno.file=genofile,
-                      format="numeric", n.traits=1, delim=",")
-
-data.loco <- set.K(data,LOCO=TRUE,n.core=3)
-data.original <- set.K(data,LOCO=FALSE,n.core=3)
-
-N <- 957 #Population size
-params <- set.params(geno.freq = 1 - 5/N, fixed = "env", fixed.type = "factor")
-
-data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"),
-                           traits=c("Negatief"),params=params,n.core=3)
-
-data.original.scan <- GWASpoly(data.original,models=c("additive","1-dom"),
-                               traits=c("vine.maturity"),params=params,n.core=3)
-
 library(ggplot2)
 
 # Ik zet mijn wd hadmatig
@@ -28,21 +13,16 @@ ld[is.na(ld)] <- 0
 
 Heatmap(ld, name = "r2")
 
-#for real#########################################################################
-setwd("C:/Users/Hp/OneDrive - NHL Stenden/minor data science/gwasie")
-library(readxl)
+geno <- "./data/potato_genos.csv"
+pheno <- "./data/potato_phenos.csv"
 
-geno <- "C:/Users/Hp/OneDrive - NHL Stenden/minor data science/gwasie/potato_genos.csv"
-pheno <- "C:/Users/Hp/OneDrive - NHL Stenden/minor data science/gwasie/potato_phenos.csv"
-
-library(GWASpoly)
 data <- read.GWASpoly(ploidy=4, pheno.file=pheno, geno.file=geno,
                       format="numeric", n.traits=8, delim=";")
 
 data.loco <- set.K(data,LOCO=TRUE,n.core=NCORE)
 
 N <- 260 #Population size
-params <- set.params(geno.freq = 0.90, fixed= "Negatief", fixed.type = "numeric") # haal fixed weg
+params <- set.params(geno.freq = 0.90, fixed="Negatief", fixed.type = "numeric") # haal fixed weg
 
 traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"), 
@@ -64,7 +44,6 @@ data.original.scan2 <- GWASpoly(data.original,models=c("additive","1-dom"),
                                traits="KOOKTYPE_num",params=params,n.core=3)
 
 
-library(ggplot2)
 #alles behalve kooktype
 qq.plot(data.original.scan,trait="RIJPTIJD") + ggtitle(label="Original")
 
