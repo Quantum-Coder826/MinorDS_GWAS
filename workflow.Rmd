@@ -1,7 +1,0 @@
----
-title: "workflow"
-authors: "Elizabeth & Berend"
-output: html_document
----
-# [GWASpoly](https://github.com/jendelman/GWASpoly)
-R-package for GWAS analyse.
