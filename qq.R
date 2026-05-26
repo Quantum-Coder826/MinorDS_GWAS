@@ -1,3 +1,33 @@
+# Produceert de data achter qq.Plot()
+# Neemt dezelfde parameter maar returns a dataframe with colums:
+# Chrom   model   y   x
+# The default plotting command is the following:
+# ggplot(data = tmp, aes(x = .data$x, y = .data$y, colour = .data$model)) + 
+#   facet_wrap(~Chrom) + 
+#   geom_point() + 
+#   theme_bw() + 
+#   xlab(expression(paste("Expected -log"[10], "(p)", sep = ""))) + 
+#   ylab(expression(paste("Observed -log"[10], "(p)", sep = ""))) + 
+#   scale_colour_brewer(palette = "Set1") + 
+#   geom_abline(slope = 1, intercept = 0, linetype = 2) + 
+#   theme(text = element_text(size = 15))
+
+# An example snippet
+#qq(data, trait="TRAIT") %>%
+#  filter(Chrom == c("chr03", "chr04", "chr05")) %>%
+#    ggplot(data = tmp, aes(x = .data$x, y = .data$y, colour = .data$model)) + 
+#    facet_wrap(~Chrom) + 
+#    geom_point() + 
+#    theme_bw() + 
+#    xlab(expression(paste("Expected -log"[10], "(p)", sep = ""))) + 
+#    ylab(expression(paste("Observed -log"[10], "(p)", sep = ""))) + 
+#    scale_colour_brewer(palette = "Set1") + 
+#    geom_abline(slope = 1, intercept = 0, linetype = 2) + 
+#    theme(text = element_text(size = 15))
+
+# Depents on
+library(dplyr)
+
 qq <- function(data, trait, model = NULL){
   stopifnot(inherits(data, "GWASpoly.fitted"))
   stopifnot(is.element(trait, names(data@scores)))
