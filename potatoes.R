@@ -3,7 +3,7 @@ library(ggplot2)
 
 # Ik zet mijn wd hadmatig
 #setwd("C:/Users/Hp/OneDrive - NHL Stenden/minor data science/gwasie")
-NCORE = 8 #Hoeveel cores ik wil gebuiken, zet ik graag in een var om het snel te veranderen.
+NCORE = 16 #Hoeveel cores ik wil gebuiken, zet ik graag in een var om het snel te veranderen.
 
 # In bestandspaden betekend `./` deze folder als in de wd van R.
 geno <- "./data/potato_genos.csv"
@@ -20,7 +20,7 @@ data.loco <- set.K(data,LOCO=TRUE,n.core=NCORE)
 N <- 260 #Population size
 params <- set.params(geno.freq = 0.90, fixed="Negatief", fixed.type = "numeric")
 
-traits <- c("RIJPTIJD","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
+traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"), 
                            traits=traits,params=params,n.core=NCORE)
 
@@ -30,17 +30,19 @@ saveRDS(data.loco.scan, "./outputs/data_loco_scan.rds") # Save hoeft niet elke r
 #### Visualiseren data ###
 ##########################
 # Remember me?
-data.loco.scan <- readRDS("./outputs/data_loco_scan.rds")
+if (!exists("data.loco.scan")) {
+  data.loco.scan <- readRDS("./outputs/data_loco_scan.rds")
+}
 
 qq.plot(data.loco.scan,trait="RIJPTIJD") + ggtitle(label="Rijptijd")
 
 #m.eff gaf niks, te streng?
-data2 <- set.threshold(data.loco.scan,method="Bonferroni",level=0.05)
+data2 <- set.threshold(data.loco.scan,method="Bonferroni",level=0.05,n.core=NCORE)
 #data2 <- set.threshold(data.loco.scan,method="M.eff",level=0.05) # errors???
 
 p <- manhattan.plot(data2,traits="RIJPTIJD")
 p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
-manhattan.plot(data2,traits="RIJPTIJD",chrom="3")
+manhattan.plot(data2,traits="RIJPTIJD",chrom="chr03") #NOTE: chromesomen zijn chrXX geformateerd
 
 #wont work
 p <- LD.plot(data, max.loci=1000)
