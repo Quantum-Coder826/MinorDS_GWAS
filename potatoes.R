@@ -35,7 +35,7 @@ if (!exists("data.loco.scan")) {
 
 # qq plots
 for (trait in traits) {
-  qq.plot(data.loco.scan, trait = trait)
+  p + qq.plot(data.loco.scan, trait = trait)
   p + ggtitle(trait)
   ggsave(paste0("./Plots/QQ/", trait, ".png"))
   print(paste("Saved:", trait))
