@@ -30,10 +30,12 @@ saveRDS(data.loco.scan, "./outputs/data_loco_scan.rds") # Save hoeft niet elke r
 ##########################
 #### Visualiseren data ###
 ##########################
-# Remember me?
+# Start hier met runnen waneer alle analyse onnodig is.
 if (!exists("data.loco.scan")) {
   data.loco.scan <- readRDS("./outputs/data_loco_scan.rds")
 }
+
+# qqplots
 for (trait in traits) {
   qq.plot(data.loco.scan, trait = trait)
   p + ggtitle(trait)
@@ -41,20 +43,9 @@ for (trait in traits) {
   print(paste("Saved:", trait))
 }
 
-#qq(data.loco.scan, trait="RIJPTIJD") %>%
-#  filter(Chrom == c("chr03", "chr04", "chr05")) %>%
-#    ggplot(aes(x, y, colour = model)) + 
-#    facet_wrap(~Chrom) + 
-#    geom_point() + 
-#    theme_bw() + 
-#    xlab(expression(paste("Expected -log"[10], "(p)", sep = ""))) + 
-#    ylab(expression(paste("Observed -log"[10], "(p)", sep = ""))) + 
-#    scale_colour_brewer(palette = "Set1") + 
-#    geom_abline(slope = 1, intercept = 0, linetype = 2) + 
-#    theme(text = element_text(size = 15))
-
 data.m.eff <- set.threshold(data.loco.scan,method="M.eff",level=0.05, n.core = NCORE)
 
+# manhattan plots
 for (trait in traits) {
   p <- manhattan.plot(data.m.eff,traits=trait)
   p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
@@ -63,10 +54,10 @@ for (trait in traits) {
   print(paste("Saved:", trait))
 }
 
-#wont work
 p <- LD.plot(data.m.eff, max.loci=1000)
 p + xlim(0,40) 
 ggsave("./Plots/LDplot.png")
 
-qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6)
+qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6) #Uit DL kwam ~15mBp
+write.csv(qtl, "./outputs/qtl_table.csv", sep = ",")
 View(qtl)
