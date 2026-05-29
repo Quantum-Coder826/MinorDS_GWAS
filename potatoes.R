@@ -19,9 +19,9 @@ data <- read.GWASpoly(ploidy=4, pheno.file=pheno, geno.file=geno,
 data.loco <- set.K(data,LOCO=TRUE,n.core=NCORE)
 
 N <- 260 #Population size
-params <- set.params(geno.freq = 0.90, fixed="Negatief", fixed.type = "numeric")
+params <- set.params(geno.freq = 1 - 5/N, fixed="Negatief", fixed.type = "numeric")
 
-traits <- c("RIJPTIJD","KIEMRUST","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
+traits <- c("RIJPTIJD","KOOKSCORE","VLEESKLEUR.NA.KOKEN","VERKLEURING.KOKEN","NABAKKEN")
 data.loco.scan <- GWASpoly(data=data.loco,models=c("additive","1-dom"), 
                            traits=traits,params=params,n.core=NCORE)
 
@@ -34,35 +34,39 @@ saveRDS(data.loco.scan, "./outputs/data_loco_scan.rds") # Save hoeft niet elke r
 if (!exists("data.loco.scan")) {
   data.loco.scan <- readRDS("./outputs/data_loco_scan.rds")
 }
+for (trait in traits) {
+  qq.plot(data.loco.scan, trait = trait)
+  p + ggtitle(trait)
+  ggsave(paste0("./Plots/QQ/", trait, ".png"))
+  print(paste("Saved:", trait))
+}
 
-qq.plot(data.loco.scan, trait = "KOOKSCORE")
+#qq(data.loco.scan, trait="RIJPTIJD") %>%
+#  filter(Chrom == c("chr03", "chr04", "chr05")) %>%
+#    ggplot(aes(x, y, colour = model)) + 
+#    facet_wrap(~Chrom) + 
+#    geom_point() + 
+#    theme_bw() + 
+#    xlab(expression(paste("Expected -log"[10], "(p)", sep = ""))) + 
+#    ylab(expression(paste("Observed -log"[10], "(p)", sep = ""))) + 
+#    scale_colour_brewer(palette = "Set1") + 
+#    geom_abline(slope = 1, intercept = 0, linetype = 2) + 
+#    theme(text = element_text(size = 15))
 
-qq(data.loco.scan, trait="RIJPTIJD") %>%
-  filter(Chrom == c("chr03", "chr04", "chr05")) %>%
-    ggplot(aes(x, y, colour = model)) + 
-    facet_wrap(~Chrom) + 
-    geom_point() + 
-    theme_bw() + 
-    xlab(expression(paste("Expected -log"[10], "(p)", sep = ""))) + 
-    ylab(expression(paste("Observed -log"[10], "(p)", sep = ""))) + 
-    scale_colour_brewer(palette = "Set1") + 
-    geom_abline(slope = 1, intercept = 0, linetype = 2) + 
-    theme(text = element_text(size = 15))
+data.m.eff <- set.threshold(data.loco.scan,method="M.eff",level=0.05, n.core = NCORE)
 
-#m.eff gaf niks, te streng?
-data2 <- set.threshold(data.loco.scan,method="M.eff",level=0.05) # errors???
-
-p <- manhattan.plot(data2,traits="RIJPTIJD")
-p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
-manhattan.plot(data2,traits="RIJPTIJD",chrom="chr03") #NOTE: chromesomen zijn chrXX geformateerd
+for (trait in traits) {
+  p <- manhattan.plot(data.m.eff,traits=trait)
+  p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
+  p + ggtitle(trait)
+  ggsave(paste0("./Plots/Manhattan/", trait, ".png"))
+  print(paste("Saved:", trait))
+}
 
 #wont work
-p <- LD.plot(data2, max.loci=1000)
-p + xlim(0,30) 
+p <- LD.plot(data.m.eff, max.loci=1000)
+p + xlim(0,40) 
+ggsave("./Plots/LDplot.png")
 
-qtl <- get.QTL(data=data2,traits="KOOKTYPE",models="additive",bp.window=5e6)
-knitr::kable(qtl)
-
-fit.ans <- fit.QTL(data=data2,trait="KOOKTYPE_num",
-                   qtl=qtl[,c("Marker","Model")])
-knitr::kable(fit.ans,digits=3)
+qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6)
+View(qtl)
