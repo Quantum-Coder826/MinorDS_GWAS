@@ -1,9 +1,7 @@
 library(GWASpoly)
 library(tidyverse)
-source("./qq.R")
 
-# Ik zet mijn wd hadmatig
-#setwd("C:/Users/Hp/OneDrive - NHL Stenden/minor data science/gwasie")
+# Zorg ervoor dat je Working dir ingesteld is op de folder van de git repo.
 NCORE = 16 #Hoeveel cores ik wil gebuiken, zet ik graag in een var om het snel te veranderen.
 
 # In bestandspaden betekend `./` deze folder als in de wd van R.
@@ -35,7 +33,7 @@ if (!exists("data.loco.scan")) {
   data.loco.scan <- readRDS("./outputs/data_loco_scan.rds")
 }
 
-# qqplots
+# qq plots
 for (trait in traits) {
   qq.plot(data.loco.scan, trait = trait)
   p + ggtitle(trait)
