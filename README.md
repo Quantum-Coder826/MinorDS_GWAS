@@ -60,4 +60,4 @@ qq(data.loco.scan, trait="TRAIT") %>%   # Produceer de qq data, pipe in dplyr
 ```
 
 Als je verschillende losse plots wilt combineren in een dan raad ik gridExtra aan.
-Zie de officele [wiki](https://github.com/baptiste/gridextra/wiki) voor alle voorbeelden.
+Zie de officiële [wiki](https://github.com/baptiste/gridextra/wiki) voor alle voorbeelden.
