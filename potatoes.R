@@ -38,7 +38,7 @@ for (trait in traits) {
   p <- qq.plot(data.loco.scan, trait = trait)
   p + ggtitle(trait)
   ggsave(paste0("./Plots/QQ/", trait, ".png"))
-  print(paste("Saved:", trait))
+  cat(paste("Saved:", trait, "\n"))
 }
 
 data.m.eff <- set.threshold(data.loco.scan,method="M.eff",level=0.05, n.core = NCORE)
@@ -49,7 +49,7 @@ for (trait in traits) {
   p + theme(axis.text.x = element_text(angle=90,vjust=0.5))
   p + ggtitle(trait)
   ggsave(paste0("./Plots/Manhattan/", trait, ".png"))
-  print(paste("Saved:", trait))
+  cat(paste("Saved:", trait, "\n"))
 }
 
 p <- LD.plot(data.m.eff, max.loci=1000)
