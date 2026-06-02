@@ -57,6 +57,7 @@ p + xlim(0,40)
 ggsave("./Plots/LDplot.png")
 
 qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6) #Uit LD kwam ~15mBp
+saveRDS(qtl, "./outputs/qtl_table.rds")
 write.csv(qtl, "./outputs/qtl_table.csv", sep = ",")
 View(qtl)
 
