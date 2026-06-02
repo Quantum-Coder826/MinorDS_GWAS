@@ -56,12 +56,16 @@ p <- LD.plot(data.m.eff, max.loci=1000)
 p + xlim(0,40) 
 ggsave("./Plots/LDplot.png")
 
-qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6) #Uit DL kwam ~15mBp
+qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6) #Uit LD kwam ~15mBp
 write.csv(qtl, "./outputs/qtl_table.csv", sep = ",")
 View(qtl)
 
-fit.ans <- fit.QTL(data=data.m.eff,trait=traits[1],
-                   qtl=qtl[,c("Marker","Model")],
-                   fixed=data.frame(Effect="Negatief",Type="nummeric"))
-fit.ans$Trait <- qtl$Trait
-knitr::kable(fit.ans,digits=3)
+fit.ans <- list()
+for (trait in traits) {
+  fit.ans[[trait]] <- fit.QTL(data=data.m.eff,trait=trait,
+                              qtl=qtl[,c("Marker","Model")],
+                              fixed=data.frame(Effect="Negatief",Type="nummeric"))
+  fit.ans[[trait]]$Trait <- qtl$Trait
+}
+View(fit.ans)
+saveRDS(fit.ans, "./outputs/fit_ans.rds")

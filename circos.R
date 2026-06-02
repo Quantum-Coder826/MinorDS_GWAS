@@ -3,6 +3,7 @@ library(circlize)
 library(ComplexHeatmap)
 
 qtl.table <- read_csv("outputs/qtl_table.csv")
+qtl.ans <- read_rds("./outputs/fit_ans.rds")
 chrom_lenghts <- read_csv("data/potato_chrom_lengths_DMv6.csv")
 
 ###################################
@@ -14,6 +15,14 @@ View(qtl.table)
 qtl.table <- qtl.table %>%
   arrange(desc(Effect)) %>%
   top_n(n = 10, wt = Effect)
+
+### Genereer alle trait signifikante ###
+trait.no = 6
+fit.ans[[trait.no]] %>%
+  filter(Trait == traits[trait.no]) %>%
+  arrange(desc(R2)) %>%
+  knitr::kable(.,digits = 3)
+
 
 circos.genomicInitialize(chrom_lenghts)
 
