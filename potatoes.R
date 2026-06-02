@@ -59,3 +59,9 @@ ggsave("./Plots/LDplot.png")
 qtl <- get.QTL(data=data.m.eff,traits=traits,bp.window=15e6) #Uit DL kwam ~15mBp
 write.csv(qtl, "./outputs/qtl_table.csv", sep = ",")
 View(qtl)
+
+fit.ans <- fit.QTL(data=data.m.eff,trait=traits[1],
+                   qtl=qtl[,c("Marker","Model")],
+                   fixed=data.frame(Effect="Negatief",Type="nummeric"))
+fit.ans$Trait <- qtl$Trait
+knitr::kable(fit.ans,digits=3)

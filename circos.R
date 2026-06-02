@@ -9,6 +9,11 @@ chrom_lenghts <- read_csv("data/potato_chrom_lengths_DMv6.csv")
 ### generate genome coordinates ###
 ###################################
 qtl.table$coord <- paste0(qtl.table$Chrom, ":", qtl.table$Position, "..", qtl.table$Position)
+View(qtl.table)
+
+qtl.table <- qtl.table %>%
+  arrange(desc(Effect)) %>%
+  top_n(n = 10, wt = Effect)
 
 circos.genomicInitialize(chrom_lenghts)
 
@@ -35,7 +40,6 @@ circos.trackPoints(
   col = trait.colors[qtl.table$Trait]
 )
 
-
 circos.trackText(
   factors = qtl.table$Chrom,
   x = qtl.table$Position,
@@ -49,7 +53,10 @@ legend.traits <- Legend(at = c("KOOKSCORE","NABAKKEN","RIJPTIJD","VERKLEURING.KO
        title = "Trait", legend_gp = gpar(fill=c("red", "orange", "green", "blue", "purple")))
 
 legend.models <- Legend(at = c("additive", "1-dom-alt", "1-dom-ref"),
-                        type = "points", pch = 15:17)
+                        type = "points", pch = 15:17, title = "Model")
+
+#text(0, 0, "Trait kookscore", cex = 1.5) # De "title"
+
 
 legends <- packLegend(legend.models, legend.traits)
 draw(legends, x = unit(5, "mm"), y = unit(10, "mm"), just = c("left", "bottom"))
