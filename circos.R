@@ -21,6 +21,9 @@ fit.ans[[trait.no]] %>%
 qtl.table <- qtl.table %>%
   filter(Marker %in% c("SNP23778", "SNP34378", "SNP28271", "SNP33303", "SNP24920", "SNP22740"))
 
+qtl.table.sig <- qtl.table %>%
+  filter(Marker %in% c("SNP23778", "SNP34378", "SNP28271", "SNP33303", "SNP24920", "SNP22740"))
+write_csv(qtl.table.sig, "./outputs/qtl_table_sig.csv")
 
 circos.genomicInitialize(chrom_lenghts,
                          sector.width = 2,
@@ -65,10 +68,10 @@ legend.traits <- Legend(at = c("NABAKKEN","RIJPTIJD","VERKLEURING.KOKEN"),
 legend.models <- Legend(at = c("additive", "1-dom-alt", "1-dom-ref"),
                         type = "points", pch = c(15,16,17), title = "Model")
 
-text(0, 0, "Signifikante SNPs", cex = 1.5) # De "title"
-text(0, -0.06, "p >= 0.05", cex = 0.8)
-
 legends <- packLegend(legend.models, legend.traits)
 draw(legends, x = unit(5, "mm"), y = unit(10, "mm"), just = c("left", "bottom"))
+
+text(0, 0, "SNPs", cex = 1.5) # De "title"
+#text(0, -0.06, expression(R^2 >= 0.05), cex = 0.8)
 
 circos.clear()
