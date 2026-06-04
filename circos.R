@@ -12,7 +12,7 @@ chrom_lenghts <- read_csv("data/potato_chrom_lengths_DMv6.csv")
 qtl.table$coord <- paste0(qtl.table$Chrom, ":", qtl.table$Position, "..", qtl.table$Position)
 
 ### maak per trait een tabel bepaal of ze signifikant zijn
-trait.no = 1
+trait.no = 5
 fit.ans[[trait.no]] %>%
   filter(Trait == traits[trait.no], R2 >= 0.05) %>%
   arrange(desc(R2)) %>%
