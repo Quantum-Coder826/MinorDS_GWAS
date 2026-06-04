@@ -1,12 +1,25 @@
 library(GWASpoly)
 library(tidyverse)
+library(gridExtra)
+All_man_tr_chr <<- NULL
+All_man_tr_chr <- character()
 
 Saveplot <- function(x, y) {
   name <- paste0("Plots_Brent/Manhattan/Single_Chrom/ManhattanPlot_", x, "_", y, ".png")
+  name2 <- paste0("ManhattanPlot_", x, "_", y)
+  name3 <- paste0(x, "_", y)
+  
+  Man_tr_chr <- manhattan.plot(data2, traits=x, chrom=y) + 
+    theme(axis.text.x = element_text(angle=270,vjust=0.5)) +
+    ggtitle(label = name2)
+  
+  
+  All_man_tr_chr[[name3]] <<- Man_tr_chr
+  
+  
   ggsave(
     filename = name,
-    plot = manhattan.plot(data2, traits=x, chrom=y) + 
-      theme(axis.text.x = element_text(angle=270,vjust=0.5)),
+    plot = Man_tr_chr,
     scale = 1,
     limitsize = TRUE,
     create.dir = TRUE,
@@ -96,24 +109,29 @@ for(tr in traits) {
       Saveplot(tr, "chr03")
       Saveplot(tr, "chr04")
       Saveplot(tr, "chr05")
+
     }
     if (tr == "KOOKSCORE"){
       Saveplot(tr, "chr04")
+
     }
     if (tr == "VLEESKLEUR.NA.KOKEN"){
-      Saveplot(tr, "chr02")
+      #Saveplot(tr, "chr02")
       Saveplot(tr, "chr03")
     }
     if (tr == "VERKLEURING.KOKEN"){
       Saveplot(tr, "chr01")
       Saveplot(tr, "chr03")
-      Saveplot(tr, "chr06")
+      #Saveplot(tr, "chr06")
     }
     if (tr == "NABAKKEN"){
-      Saveplot(tr, "chr05")
-      Saveplot(tr, "chr08")
+     # Saveplot(tr, "chr05")
+      #Saveplot(tr, "chr08")
     }
 }
+
+
+
 ######################################################
 ggsave(
   filename = paste0("Plots_Brent/LD/LD_Plot_All.png"),
@@ -137,3 +155,55 @@ for(tr in traits) {
                qtl=qtl[,c("Marker","Model")])
   knitr::kable(x, digits=3)
 }
+
+#####################################################
+AllelDosage <- function(marker, traitname, data, chr){
+  # marker = bv. "SNP24920"
+  #trait = "trait"
+GenoMarker <- data.frame(
+  ID = rownames(data@geno),
+  dosage = data@geno[, marker]
+)
+
+ MarkerData<- merge(GenoMarker,
+            data@pheno[, c("ID", traitname)],
+            by = "ID")
+
+ ggsave(
+   filename = paste0("Plots_Brent/Allele_Dosage/AD_", marker,"_", traitname,"_", chr, ".png"),
+   plot = ggplot(MarkerData, aes(x = factor(dosage), y = .data[[traitname]])) +
+     geom_boxplot() +
+     geom_jitter(width = 0.15, alpha = 0.5) +
+     labs(
+       x = "Allele dosage",
+       y = traitname,
+       title = marker
+     ) +
+     theme_bw(),
+   scale = 1,
+   limitsize = TRUE,
+   create.dir = TRUE,
+ )
+}
+#################################################
+AllelDosage("SNP20248", "RIJPTIJD", data, "chr04")
+AllelDosage("SNP17347", "RIJPTIJD", data, "chr03")
+AllelDosage("SNP23778", "RIJPTIJD", data, "chr05")
+AllelDosage("SNP24824", "RIJPTIJD", data, "chr05")
+
+AllelDosage("SNP20811", "KOOKSCORE", data, "chr04")
+AllelDosage("SNP21172", "KOOKSCORE", data, "chr04")
+AllelDosage("SNP21737", "KOOKSCORE", data, "chr04")
+
+AllelDosage("SNP15706", "VLEESKLEUR.NA.KOKEN", data, "chr03")
+AllelDosage("SNP16489", "VLEESKLEUR.NA.KOKEN", data, "chr03")
+AllelDosage("SNP18001", "VLEESKLEUR.NA.KOKEN", data, "chr03")
+
+AllelDosage("SNP1655", "VERKLEURING.KOKEN", data, "chr01")
+AllelDosage("SNP16716", "VERKLEURING.KOKEN", data, "chr03")
+AllelDosage("SNP18001", "VERKLEURING.KOKEN", data, "chr03")
+AllelDosage("SNP19842", "VERKLEURING.KOKEN", data, "chr03")
+
+###################################################
+
+
