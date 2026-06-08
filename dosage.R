@@ -34,17 +34,11 @@ dosage.plot <- function(snp, trait) {
 plots_gorb <- list()
 #plots_gorb <- append(plots_gorb, dosage.plot("", ""))
 plots_gorb <- append(plots_gorb, dosage.plot("SNP23778", "RIJPTIJD")) # dosage 2 & 3
-#plots_gorb <- append(plots_gorb, dosage.plot("SNP34378", "RIJPTIJD"))
-
 plots_gorb <- append(plots_gorb, dosage.plot("SNP23047", "VLEESKLEUR.NA.KOKEN"))# dosage 3
-plots_gorb <- append(plots_gorb, dosage.plot("SNP16489", "VLEESKLEUR.NA.KOKEN"))# dosage 1 & 2
-
-#lots_gorb <- append(plots_gorb, dosage.plot("SNP28271", "VERKLEURING.KOKEN"))
-plots_gorb <- append(plots_gorb, dosage.plot("SNP16782", "VERKLEURING.KOKEN")) # dosage 2 & 3
-#plots_gorb <- append(plots_gorb, dosage.plot("SNP1655", "VERKLEURING.KOKEN")) # All dosage Honarable mention
-
 plots_gorb <- append(plots_gorb, dosage.plot("SNP33303", "NABAKKEN")) # dosage 2
+plots_gorb <- append(plots_gorb, dosage.plot("SNP16489", "VLEESKLEUR.NA.KOKEN"))# dosage 1 & 2
 plots_gorb <- append(plots_gorb, dosage.plot("SNP24920", "NABAKKEN")) # all exept dosage 4
-#plots_gorb <- append(plots_gorb, dosage.plot("SNP22740", "NABAKKEN"))
+plots_gorb <- append(plots_gorb, dosage.plot("SNP16782", "VERKLEURING.KOKEN")) # dosage 2 & 3
 
-grid.arrange(grobs = plots_gorb, ncol = 3)
+
+grid.arrange(grobs = plots_gorb, ncol = 2)
